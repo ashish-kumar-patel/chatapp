@@ -1,0 +1,78 @@
+<div class="chat-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen()">
+    <!-- User Profile Header -->
+    <div class="sidebar-header">
+      <div class="user-avatar" [style.background]="auth.currentUser()?.avatarColor">
+        {{ auth.currentUser()?.username?.[0]?.toUpperCase() }}
+      </div>
+      <div class="user-info">
+        <span class="username">{{ auth.currentUser()?.username }}</span>
+        <span class="status online">● Online</span>
+      </div>
+      <button class="btn-icon" (click)="logout()" title="Logout">🔒 </button>
+    </div>
+
+    <!-- Room List -->
+    <app-room-list
+      [rooms]="rooms()"
+      [selectedRoom]="selectedRoom()"
+      (roomSelected)="selectRoom($event)"
+      (roomCreated)="createRoom($event)"
+    />
+
+    <!-- Online Users -->
+    <div class="online-users">
+      <div class="section-title">Online Users ({{ onlineUsers().length }})</div>
+      <div class="user-item" *ngFor="let user of onlineUsers()">
+        <div class="mini-avatar" [style.background]="user.avatarColor">
+          {{ user.username[0].toUpperCase() }}
+        </div>
+        <span>{{ user.username }}</span>
+        <span class="dot">●</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Chat Area -->
+  <main class="chat-main">
+    <!-- Top Bar -->
+    <div class="chat-topbar">
+      <button class="btn-icon" (click)="toggleSidebar()">☰</button>
+      <div class="room-info" *ngIf="selectedRoom(); else noRoom">
+        <span class="room-icon">#</span>
+        <div>
+          <div class="room-name">{{ selectedRoom()?.name }}</div>
+          <div class="room-desc">{{ selectedRoom()?.description }}</div>
+        </div>
+      </div>
+      <ng-template #noRoom>
+        <span class="placeholder">Select a room to start chatting</span>
+      </ng-template>
+
+      <div class="connection-status" [class.connected]="signalR.isConnected()">
+        {{ signalR.isConnected() ? '🟢 Connected' : '🔴 Connecting...' }}
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <app-message-list
+      [messages]="messages()"
+      [currentUserId]="auth.currentUser()?.userId || 0"
+    />
+
+    <!-- Typing Indicator -->
+    <div class="typing-indicator" *ngIf="typingUsers().length > 0">
+      <span class="typing-dots"><span></span><span></span><span></span></span>
+      {{ typingUsers().join(', ') }} {{ typingUsers().length === 1 ? 'is' : 'are' }} typing...
+    </div>
+
+    <!-- Message Input -->
+    <app-message-input
+      [disabled]="!selectedRoom() || !signalR.isConnected()"
+      [placeholder]="selectedRoom() ? 'Message #' + selectedRoom()?.name : 'Select a room...'"
+      (messageSent)="sendMessage($event)"
+      (typing)="onTyping()"
+    />
+  </main>
+</div>

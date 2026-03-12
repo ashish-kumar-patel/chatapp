@@ -1,0 +1,45 @@
+<div class="message-container" #messageContainer>
+  <div *ngIf="messages.length === 0" class="empty-state">
+    <div class="empty-icon">💬</div>
+    <p>No messages yet. Be the first to say something!</p>
+  </div>
+
+  <ng-container *ngFor="let msg of messages; let i = index">
+    <!-- Date Divider -->
+    <div class="date-divider" *ngIf="showDateDivider(i)">
+      <hr /><span>{{ formatDate(msg.sentAt) }}</span><hr />
+    </div>
+
+    <!-- Message Bubble -->
+    <div class="message" [class.own]="isOwnMessage(msg)">
+      <!-- Avatar (only for others' messages) -->
+      <div class="avatar" *ngIf="!isOwnMessage(msg)" [style.background]="msg.avatarColor">
+        {{ msg.senderName[0].toUpperCase() }}
+      </div>
+
+      <div class="bubble-wrapper">
+        <!-- Sender name (only for others) -->
+        <div class="sender-info" *ngIf="!isOwnMessage(msg)">
+          <span class="sender-name">{{ msg.senderName }}</span>
+          <span class="time">{{ formatTime(msg.sentAt) }}</span>
+        </div>
+
+        <!-- Message Bubble -->
+        <div class="bubble" [class.own-bubble]="isOwnMessage(msg)">
+          {{ msg.content }}
+        </div>
+
+        <!-- Time for own messages -->
+        <div class="own-time" *ngIf="isOwnMessage(msg)">
+          {{ formatTime(msg.sentAt) }}
+          <span *ngIf="msg.isEdited" class="edited">(edited)</span>
+        </div>
+      </div>
+
+      <!-- Avatar placeholder for own messages -->
+      <div class="avatar own-avatar" *ngIf="isOwnMessage(msg)">
+        <div class="avatar-circle" [style.background]="'#6366f1'">Me</div>
+      </div>
+    </div>
+  </ng-container>
+</div>

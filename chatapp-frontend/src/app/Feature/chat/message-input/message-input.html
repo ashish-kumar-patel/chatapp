@@ -1,0 +1,7 @@
+<div class="input-area">
+    <textarea [(ngModel)]="messageText" [placeholder]="placeholder" [disabled]="disabled" (keydown)="onKeyDown($event)"
+        (input)="onInput()" rows="1" class="message-textarea"></textarea>
+    <button (click)="send()" [disabled]="!messageText.trim() || disabled" class="send-btn" title="Send (Enter)">
+        ➤
+    </button>
+</div>

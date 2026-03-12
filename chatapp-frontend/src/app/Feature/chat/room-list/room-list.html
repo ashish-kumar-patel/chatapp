@@ -1,0 +1,31 @@
+<div class="room-list">
+  <div class="section-header">
+    <span class="section-title">Channels</span>
+    <button class="btn-add" (click)="showCreateForm = !showCreateForm" title="Create room">+</button>
+  </div>
+
+  <!-- Create Room Form -->
+  <div class="create-room-form" *ngIf="showCreateForm">
+    <input
+      [(ngModel)]="newRoomName"
+      placeholder="channel-name"
+      (keyup.enter)="createRoom()"
+      maxlength="50"
+    />
+    <div class="form-actions">
+      <button (click)="createRoom()" class="btn-confirm">Create</button>
+      <button (click)="showCreateForm = false" class="btn-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Room Items -->
+  <div
+    class="room-item"
+    *ngFor="let room of rooms"
+    [class.active]="selectedRoom?.id === room.id"
+    (click)="selectRoom(room)"
+  >
+    <span class="room-hash">#</span>
+    <span class="room-name">{{ room.name }}</span>
+  </div>
+</div>
