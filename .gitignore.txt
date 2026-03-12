@@ -1,0 +1,23 @@
+# ========================
+# Angular (Frontend)
+# ========================
+chatapp-frontend/node_modules/
+chatapp-frontend/dist/
+chatapp-frontend/.angular/
+chatapp-frontend/.env
+
+# ========================
+# .NET Core (Backend API)
+# ========================
+chatapp-api/bin/
+chatapp-api/obj/
+chatapp-api/*.user
+chatapp-api/appsettings.Development.json
+
+# ========================
+# General
+# ========================
+.DS_Store
+Thumbs.db
+*.log
+.env
